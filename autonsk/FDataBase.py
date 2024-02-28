@@ -247,3 +247,15 @@ class FDataBase:
       table_products = self.__cur.fetchall()
 
       return table_products
+    
+    def searchGoods(self, query):
+      print(query)
+      self.__cur.execute(
+            '''
+            SELECT g.id AS id
+            FROM goods AS g
+            WHERE g.title LIKE ?
+            ''', ('%'+query+'%',))
+      goods = self.__cur.fetchall()
+      print(goods)
+      return goods

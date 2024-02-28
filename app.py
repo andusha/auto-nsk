@@ -9,6 +9,7 @@ from flask_uploads import configure_uploads, patch_request_class
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from webpack_boilerplate.config import setup_jinja2_ext
+import sqlite_icu
 
 from autonsk.FDataBase import FDataBase
 from autonsk.UserLogin import UserLogin
@@ -61,6 +62,8 @@ def load_user(user_id):
 def connect_db():
     conn = sqlite3.connect(app.config['DATABASE'])
     conn.row_factory = sqlite3.Row
+    conn.enable_load_extension(True)
+    conn.load_extension(sqlite_icu.extension_path().replace('.so',''))
     return conn
 
 def create_db():
@@ -116,7 +119,6 @@ def show_good(id):
           'data': response_json
       }
   good, attributes, offers, table_products = dbase.show_goods(id)
-  print(good, attributes, offers, table_products)
   good_dict['good'] = good
   good_dict['good_attrs'] = attributes
   good_dict['good_offers'] = offers
@@ -124,7 +126,7 @@ def show_good(id):
 
   table_products_json = sqlRowToJson(table_products)
 
-  return render_template('good.html', context=[good_dict, table_products_json])
+  return render_template('good.html', context=[good_dict, table_products_json], auth = current_user.is_authenticated)
 
 @app.route('/register', methods = ['POST', 'GET'])
 def register():
@@ -162,7 +164,7 @@ def login():
             login_user(userlogin, remember=rm)
             return redirect(url_for("main"))
 
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form , auth = current_user.is_authenticated)
 
 @app.route('/add/good', methods = ['POST', 'GET'])
 @login_required
@@ -210,14 +212,30 @@ def add_good():
                                       form.amount.data,
                                       form.period.data,
             )
-    return render_template("addGood.html", goods = goods, form=form)
+    return render_template("addGood.html", goods = goods, form=form, auth = current_user.is_authenticated)
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     flash("Вы вышли из аккаунта", "success")
-    return redirect(url_for('index'))
+    return redirect(url_for('main'))
+
+@app.route('/search')
+def search():
+  goods = []
+  query = request.args.get('q')
+
+  if query:
+      goods_id = dbase.searchGoods(query)
+      for id in goods_id:
+        good, _, offers, _ = dbase.show_goods(int(id['id']))
+        goods.append((good['article'],good['title'], offers['min_period'], offers['min_price']))
+  else:
+      print('f')
+      return redirect(url_for('main'))
+
+  return render_template('search.html', goods = goods, auth = current_user.is_authenticated)
 
 if __name__ == '__main__':
   app.run(host='localhost', port=8000)
