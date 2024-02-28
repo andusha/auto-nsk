@@ -1,0 +1,114 @@
+
+thead{
+    background-color: rgb(221, 221, 221);
+}
+
+.title-container{
+    display: flex;
+    justify-content: space-between;
+    background-color: rgb(232, 232, 232);
+    padding: 0.8rem;
+}
+th:nth-child(4){
+    width: 35%;
+}
+.thead-arrows::before{
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-color: silver transparent;
+    border-style: solid;
+    border-width: 7px 4px 0;
+    margin: 0 0 0 5px;
+    transform: translateY(4px);
+}
+.thead-arrows::after{
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-color: silver transparent;
+    border-style: solid;
+    border-width: 0 4px 7px;
+    position: absolute;
+    transform: translate(-8px);
+}
+.thead-arrows__asc::after{
+    border-color: #f50634 transparent;
+}
+.thead-arrows__desc::before{
+    border-color: #f50634 transparent;
+}
+.th-sortable>.th-inner{
+    display: flex;
+    justify-content: space-between;
+}
+.th-inner{
+    padding: 0.8rem;
+}
+td>div{
+    padding: 0.5rem;
+}
+/* Price slider */
+.price-input {
+    width: 80%;
+    display: flex;
+  }
+
+.price-input .field {
+    display: flex;
+    width: 100%;
+    height: 25px;
+    align-items: center;
+  }
+.field input {
+    width: 100%;
+    height: 100%;
+    outline: none;
+    font-size: 19px;
+    margin-left: 12px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #999;
+    -moz-appearance: textfield;
+  }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
+.price-input .separator {
+    width: 130px;
+    display: flex;
+    font-size: 19px;
+    align-items: center;
+    justify-content: center;
+  }
+.slider {
+    height: 5px;
+    position: relative;
+    background: #b81717;
+    border-radius: 5px;
+  }
+.range-input {
+    position: relative;
+  }
+.range-input input {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    top: -5px;
+    background: none;
+    pointer-events: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+  }
+input[type="range"]::-webkit-slider-thumb {
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    background: #b82217;
+    pointer-events: auto;
+    -webkit-appearance: none;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.05);
+  }

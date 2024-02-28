@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% block head %}
+{{ stylesheet_pack('good') }}
+{% endblock %}
+
+
+
+
+{% block content %}
+<script>
+    let data = JSON.parse({{ context[1]|tojson|safe }})
+</script> 
+<div class="flex flex-col max-w-screen-2xl mx-auto my-4 md:flex-row px-3 md:px-0">
+    <section class="w-full sm:w-1/5">
+        <div class="w-10/12 mx-auto p-3 rounded-sm" data-flag=true id="slider">
+            <h2 class="font-semibold text-xl mb-4">Цена</h2>
+            <div class="slider"></div>
+            <div class="range-input">
+                <input type="range" class="range-min" min="{{ context[0].good_offers.min_price }}"
+                 max="{{ context[0].good.max_price }}"
+                value="{{ context[0].good_offers.min_price }}">
+                <input type="range" class="range-max" min="{{ context[0].good_offers.min_price }}"
+                 max="{{ context[0].good.max_price }}"
+                 value="{{ context[0].good.max_price }}">
+            </div>
+            <div class="price-input flex py-3 w-full">
+                <div class="field w-full"><input type="number" class="input-min" value="{{ context[0].good_offers.min_price }}"></div>
+                <div class="separator">-</div>
+                <div class="field w-full"><input type="number" class="input-max" value="{{ context[0].good.max_price }}"></div>
+            </div>
+        </div>
+    </section>
+    <div class="sm:w-4/5">
+        <div class="flex flex-col gap-4">
+            <div class="product-titles" data-product-id="{{ context[0].good.article }}"
+             data-product-title="{{ context[0].good.title }}"
+             data-manufacturer-title="{{ context[0].good.manufacturer_title }}">
+                <h1 class="brand-title font-bold text-xl sm:text-3xl">
+                    {{ context[0].good.manufacturer_title }}
+                    <span class="product-article">{{ context[0].good.article }}</span>
+                    </h1>
+                <h2 class="product-title font-bold text-xl sm:text-3xl">{{ context[0].good.title }}</h2>
+            </div>
+            <div class="my-4 flex flex-col justify-between md:flex-row md:my-0">
+                <div class="sm:max-h-48 sm:max-w-48">
+                    <img src="{{ context[0].good.img_path }}" alt="" class="product-img">
+                </div>
+                <div class="sm:w-2/4">
+                    <ul class="my-4 [&>*:nth-child(even)]:bg-gray-100 rounded-lg">
+                        <li class="flex justify-between items-center p-2">
+                            <div class="attr">Артикул</div>
+                            <div class="attr-value">{{ context[0].good.article }}</div>
+                        </li>
+                        <li class="flex justify-between items-center p-2">
+                            <div class="attr">Производитель</div>
+                            <div class="attr-value">{{ context[0].good.manufacturer_title }}</div>
+                        </li>
+                        {% for attr in context[0].good_attrs %}
+                        <li class="flex justify-between items-center p-2">
+                            <div class="attr">{{ attr.name }}</div>
+                            <div class="attr-value">{{ attr.value }}</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="flex flex-col gap-5">
+                    <div class="p-8 bg-white shadow-lg flex flex-col gap-3 rounded-lg">
+                        <div class="offer-title text-lg">Самый дешевый</div>
+                        <div class="font-semibold text-lg">{{ context[0].good_offers.min_price }} ₽</div>
+                        <div class="offer-period">будет через {{ context[0].good_offers.min_price_period }} дн.</div>
+                    </div>
+                    <div class="p-8 bg-white shadow-lg flex flex-col gap-3 rounded-lg">
+                        <div class="offer-title text-lg">Самый быстрый</div>
+                        <div class="font-semibold text-lg">{{ context[0].good_offers.min_period_price }} ₽</div>
+                        <div class="offer-period">будет через {{ context[0].good_offers.min_period }} дн.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <table class="non-retail m-10 hidden sm:block">
+            <thead id="thead" data-flag=false>
+                <tr>
+                    <th>
+                        <div class="th-inner">
+                            <div class="thead-text">Производитель</div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th-inner">
+                            <div class="thead-text">Номер</div>
+                        </div>
+                    </th>
+                    <th class="th-sortable" data-type="info" data-sort-method="none">
+                        <div class="th-inner">
+                            <div class="thead-text">Инфо</div>
+                            <div class="thead-arrows"></div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th-inner">
+                            <div class="thead-text">Наименование</div>
+                        </div>
+                    </th>
+                    <th class="th-sortable" data-type="amount" data-sort-method="none">
+                        <div class="th-inner">
+                            <div class="thead-text">Наличие</div>
+                            <div class="thead-arrows"></div>
+                        </div>
+                    </th>
+                    <th class="th-sortable" data-type="period" data-sort-method="none">
+                        <div class="th-inner">
+                            <div class="thead-text">Срок</div>
+                            <div class="thead-arrows"></div>
+                        </div>
+                    </th>
+                    <th class="th-sortable" data-type="price" data-sort-method="none">
+                        <div class="th-inner">
+                            <div class="thead-text">Цена</div>
+                            <div class="thead-arrows"></div>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="th-inner">
+                            <div class="thead-text">Заказ</div>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tbody" class="tbody [&>*:nth-child(even)]:bg-gray-100">
+                <tr class="title-row">
+                    <td colspan=8>
+                        <div class="title-container">
+                            <div class="title-section">Запрошенный номер</div>
+                            <div class="total-section">{{ context[0].table_products|length }}</div>
+                        </div>
+                    </td>
+                </tr>
+                {% for section in context[0].table_products %}
+                <tr>
+                    <td><div class="table-manufacturer-title">{{ context[0].good.manufacturer_title }}</div></td>
+                    <td><div class="table-good-number">{{ context[0].good.article }}</div></td>
+                    <td>
+                        <div class="table-good-info">
+                        {% if section.path %}
+                            {% if section.atach == 1 %}
+                            <img src="{{ url_for('static', filename=section.path) }}" title="Дилер">    
+                            {% else %}
+                            <img src="{{ url_for('static', filename=section.path) }}" title="Надёжный поставщик">   
+                            {% endif %}  
+                        {% endif %}
+                        </div>
+                    </td>
+                    <td><div class="table-good-title">{{ context[0].good.title }}</div></td>
+                    <td><div class="table-good-amount">{{ section.amount }} шт.</div></td>
+                    <td><div class="table-good-period">{{ section.period }} дн.</div></td>
+                    <td><div class="table-good-price">{{ section.price }} ₽</div></td>
+                    <td>
+                        <button class="w-full rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px"
+                            class="cursor-pointer fill-[#ff0000] inline-block" viewBox="0 0 512 512">
+                            <path
+                              d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0"
+                              data-original="#000000"></path>
+                          </svg>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="w-full flex flex-col gap-2 sm:hidden">
+            <h2 class="font-semibold text-xl mb-4">Предложения</h2>
+            <div id="miniTable">
+            {% for section in context[0].table_products %}
+            <div class="flex justify-between bg-gray-100 p-2">
+                <div class="">{{ section.amount }} шт.</div>
+                <div class="">{{ section.period }} дн.</div>
+                <div class="font-semibold">{{ section.price }} ₽</div>
+                <div class="">
+                    <button class="w-full rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px"
+                        class="cursor-pointer fill-[#ff0000]  inline-block" viewBox="0 0 512 512">
+                        <path
+                          d="M164.96 300.004h.024c.02 0 .04-.004.059-.004H437a15.003 15.003 0 0 0 14.422-10.879l60-210a15.003 15.003 0 0 0-2.445-13.152A15.006 15.006 0 0 0 497 60H130.367l-10.722-48.254A15.003 15.003 0 0 0 105 0H15C6.715 0 0 6.715 0 15s6.715 15 15 15h77.969c1.898 8.55 51.312 230.918 54.156 243.71C131.184 280.64 120 296.536 120 315c0 24.812 20.188 45 45 45h272c8.285 0 15-6.715 15-15s-6.715-15-15-15H165c-8.27 0-15-6.73-15-15 0-8.258 6.707-14.977 14.96-14.996zM477.114 90l-51.43 180H177.032l-40-180zM150 405c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm167 15c0 24.813 20.188 45 45 45s45-20.188 45-45-20.188-45-45-45-45 20.188-45 45zm45-15c8.27 0 15 6.73 15 15s-6.73 15-15 15-15-6.73-15-15 6.73-15 15-15zm0 0"
+                          data-original="#000000"></path>
+                      </svg>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{{ javascript_pack('good', 'base', attrs='charset="UTF-8"') }}
+{% endblock %}

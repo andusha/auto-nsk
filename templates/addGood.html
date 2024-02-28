@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block head %}
+{{ stylesheet_pack('addGood') }}
+{% endblock %}
+{% block content %}
+<form enctype="multipart/form-data" method="post" class="text-center">
+    {{ form.hidden_tag() }}
+    <div class="flex flex-col max-w-screen-2xl mx-auto my-4 md:flex-row px-3 md:px-0">
+        <section class="w-full sm:w-1/5">
+            <select class="w-10/12 mx-auto select" name="good" placeholder="Выберите вид товара">
+                <option value=""></option>
+                {% for good in goods %}
+                    <option value="{{good['id']}}">{{good['title']}}</option>
+                {% endfor %}	
+            </select>
+            {{form.select_input(class="hidden")}}
+        </section>
+        <div class="sm:w-4/5">
+            <div class="flex flex-col gap-4">
+                <div class="">
+                    {{form.brand_title(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5 mb-2")}}
+                    {{form.product_title(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5 my-2")}}
+                </div>
+                <div class="my-4 flex flex-col justify-between md:flex-row md:my-0">
+                    <div class="avatar-wrapper">
+                        <img class="profile-pic" src="" />
+                        <div class="upload-button">
+                            <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                        </div>
+                        {{ form.photo(class="file-upload", type="file", accept="image/*") }}
+                    </div>
+                <div class="sm:w-2/4">
+                    <ul id="attributes" class="my-4">
+                        <li class="flex justify-between items-center py-2">
+                            <div class="text-center">Артикул</div>
+                            <div class="">                       
+                                {{form.article(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5")}}
+                            </li>
+                        <li class="flex justify-between items-center py-2">
+                            <div class="">Производитель</div>
+                            <div class="">
+                                {{form.manufacturer(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5")}}
+                            </div>
+                        </li>
+                    </ul>
+                    <button id="add-attribute-button" class="w-full flex items-center justify-center">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-10 h-10">
+                            <path d="M4 12H20M12 4V20" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="flex flex-col gap-3 max-w">
+                    {{form.price(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5")}}
+                    {{form.amount(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5")}}
+                    {{form.period(class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#ff0000] focus:border-[#ff0000] block w-full p-2.5")}}
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    {{ form.submit(class="max-w-96 w-full text-white bg-[#ff0000]/75 hover:bg-[#ff0000] focus:ring-4 focus:outline-none focus:ring-[#ff0000] font-semibold rounded-lg text-3xl px-5 py-2.5 text-center my-20")}}
+</form> 
+
+{% endblock %}
+
+{% block script %}
+<script
+  src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+  crossorigin="anonymous"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+{{ javascript_pack('addGood', 'base', attrs='charset="UTF-8"') }}  
+{% endblock %}

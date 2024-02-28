@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block head %}
+{% endblock %}
+{% block content %}
+<main class="main">
+	<form class="form" method="post">
+		{{ form.hidden_tag() }}
+		<p>{{ form.email(placeholder='Электронная почта') }}</p>
+		<p>{{ form.psw(placeholder='Пароль') }}</p>
+		<p class="remember">{{ form.remember.label() }} {{ form.remember() }}
+		<p>{{ form.submit() }}
+		<p class="message">Не зарегистрированны? <a href="/register">Создать аккаунт</a></p>
+	</form>
+</main>   
+{% endblock %}

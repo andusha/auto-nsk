@@ -1,0 +1,20 @@
+{% block head %}
+{{ stylesheet_pack('register') }}
+{% endblock %}
+{% block content %}
+<main class="main">
+    <div class="form-header">
+        <h1>Регистрация</h1>
+    </div>
+    {% for msg in get_flashed_messages() %}
+    <div class="flash">{{msg}}</div>
+    {% endfor %}
+    <div class="reg-2-type-selection">
+        <button class="selection first-selection" type="button" id="fiz">Физическое лицо</button>
+        <button class="selection second-selection" type="button" id="ur">Юридическое лицо</button>
+    </div>
+</main>   
+{% endblock %}
+{% block script %}
+{{ javascript_pack('register', attrs='charset="UTF-8"') }}      
+{% endblock %}
