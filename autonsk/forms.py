@@ -5,9 +5,9 @@ from flask_wtf.file import FileField, FileAllowed, FileRequired
 from autonsk.config import photos
 
 class LoginForm(FlaskForm):
-    email = StringField("Email: ", validators=[Email("Некорректный email")])
+    email = StringField("Email: ", validators=[Email("Некорректный email")], render_kw={'placeholder':'email'})
     psw = PasswordField("Пароль: ", validators=[DataRequired(),
-                                                Length(min=4, max=100, message="Пароль должен быть от 4 до 100 символов")])
+                                                Length(min=4, max=100, message="Пароль должен быть от 4 до 100 символов")], render_kw={'placeholder':'пароль'})
     remember = BooleanField("Запомнить", default = False)
     submit = SubmitField("Войти")
 

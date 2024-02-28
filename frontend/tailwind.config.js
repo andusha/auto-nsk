@@ -17,7 +17,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'main': '#EB6120',
+        'main': '#ff0000',
       },
       fontFamily: {
         title: 'Open Sans, sans-serif',
