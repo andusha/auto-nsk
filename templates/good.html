@@ -155,7 +155,10 @@
                     <td><div class="table-good-period">{{ section.period }} дн.</div></td>
                     <td><div class="table-good-price">{{ section.price }} ₽</div></td>
                     <td>
-                        <button class="w-full rounded-lg">
+                        <button class="busketButton w-full rounded-lg" data-id="{{ context[0].good.article }}"
+                                                                       data-price="{{ section.price }}"
+                                                                       data-amount="{{ section.amount }}"
+                                                                       data-title="{{ context[0].good.title }}">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px"
                             class="cursor-pointer fill-[#ff0000] inline-block" viewBox="0 0 512 512">
                             <path
@@ -177,7 +180,10 @@
                 <div class="">{{ section.period }} дн.</div>
                 <div class="font-semibold">{{ section.price }} ₽</div>
                 <div class="">
-                    <button class="w-full rounded-lg" id="buy">
+                    <button class="busketButton w-full rounded-lg" id="buy" data-id="{{ context[0].good.article }}"
+                                                                            data-price="{{ section.price }}"
+                                                                            data-amount="{{ section.amount }}"
+                                                                            data-title="{{ context[0].good.title }}">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px"
                         class="cursor-pointer fill-[#ff0000]  inline-block" viewBox="0 0 512 512">
                         <path

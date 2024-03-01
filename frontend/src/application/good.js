@@ -213,6 +213,20 @@ class TableUI{
         }}
 }
 
+function busketButtonOnClick(){
+    const BusketButtons = document.querySelectorAll('.busketButton');
+    BusketButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            console.log(button.dataset.id, button.dataset.title, button.dataset.price, button.dataset.amount)
+            addProductToBasket(button.dataset.id, button.dataset.title, button.dataset.price, button.dataset.amount)
+        })
+    })
+
+}
+const tableSort = new TableUI(thead)
+priceSlider()
+busketButtonOnClick()
+
 const updateState = async (minPrice, maxPrice) => {
     const productId = document.querySelector('.product-titles').dataset.productId
     const response = await fetch(`/goods/${productId}?` + new URLSearchParams({
@@ -223,5 +237,17 @@ const updateState = async (minPrice, maxPrice) => {
     data = JSON.parse(response_json['data'])
 }
 
-const tableSort = new TableUI(thead)
-priceSlider()
+const addProductToBasket = async (id, title, price, amount) => {
+    await fetch('/add-product-session', {
+            headers : {
+                'Content-Type' : 'application/json'
+            },
+            method : 'POST',
+            body : JSON.stringify( {
+                'id' : id,
+                'title' : title,
+                'price' : price,
+                'amount' : amount
+            })
+    })
+}

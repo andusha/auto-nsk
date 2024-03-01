@@ -4,7 +4,7 @@ from pathlib import Path
 import sqlite3
 import json
 
-from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, make_response
+from flask import Flask, render_template, request, g, flash, abort, redirect, url_for, session 
 from flask_uploads import configure_uploads, patch_request_class
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -154,6 +154,9 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('main'))
+    if 'products' not in session:
+        session['products'] = {}
+        session.permanent = True
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -219,6 +222,7 @@ def add_good():
 def logout():
     logout_user()
     flash("Вы вышли из аккаунта", "success")
+    session.pop('products', None)
     return redirect(url_for('main'))
 
 @app.route('/search')
@@ -232,10 +236,34 @@ def search():
         good, _, offers, _ = dbase.show_goods(int(id['id']))
         goods.append((good['article'],good['title'], offers['min_period'], offers['min_price']))
   else:
-      print('f')
       return redirect(url_for('main'))
 
   return render_template('search.html', goods = goods, auth = current_user.is_authenticated)
 
+@app.route('/shopping-cart')
+def shopping_cart():
+    products = {}
+    if 'products' in session:
+        products = session.get('products')
+    print(products)
+    return render_template('shoppingCart.html', products = products)
+
+@app.route('/add-product-session', methods = ['POST', 'GET'])
+def add_product_session():
+    if request.method == 'POST':
+        product = request.get_json()
+        session['products'][str(product['id'])] = {'title': product['title'],
+                                                   'price': product['price'],
+                                                   'amount': product['amount']
+                                                  }
+        session.modified = True
+    return {'response': 200}
+            
+
+@app.route('/delete-product-session/<id>')
+def delete_product_session(id):
+    del session['products'][id]
+    session.modified = True
+    return {'response': 200}
 if __name__ == '__main__':
   app.run(host='localhost', port=8000)
